@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="wb-build" content="20260920-214529">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -20,7 +21,7 @@
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="../../index.css">
+    <link rel="stylesheet" href="../../index.css?v=20260920-214529">
 <style>
 #blog h2,#blog h3,#blog h4,#blog h5,#blog h6{color:inherit;line-height:1.35;margin:34px 0 14px;font-weight:600}
 #blog h2{font-size:1.6em}
@@ -54,7 +55,18 @@
 #blog section.footnotes ol{padding-left:1.5em}
 #blog section.footnotes li{margin:6px 0}
 #blog .fnback{text-decoration:none;margin-left:.3em}
-</style></head>
+</style><!-- wb-autorefresh：GitHub Pages 给所有文件加了 10 分钟缓存，发布后重新打开可能还是旧的。
+     这里对比页面里烙的构建号与线上最新构建号，不一致就用带时间戳的地址自动重开一次。
+     地址里已经带 t= 时不再检查，避免反复重载。 -->
+<script>(function(){
+var m=document.querySelector('meta[name="wb-build"]');if(!m)return;
+if(/[?&]t=/.test(location.search))return;
+var mine=m.getAttribute('content');
+fetch(location.pathname+'?wbp='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(t){
+var x=/<meta name="wb-build" content="([^"]+)"/.exec(t);
+if(x&&x[1]!==mine){location.replace(location.pathname+'?t='+Date.now()+location.hash)}
+}).catch(function(){});
+})();</script></head>
   <body>
     <div id="loading">
       <div id="spinner"></div>
