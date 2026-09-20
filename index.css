@@ -545,6 +545,22 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--text-color);
 }
+
+/* ---- 本项目新增：修手机端文章标题被顶部大图压住 ----
+   实测（无头 Chrome，视口 748px 高）：
+     #background 高 55vh = 411px（大图下沿）
+     #profile_blog 上边距只有 36vh，加上它自身高度后 #blog_title 顶部落在 408px
+   → 标题正好压在大图下沿，上半截被图盖掉。
+   这个偏差随屏幕变高而变大：标题位置 = 36vh + 资料块高度，大图下沿 = 55vh，
+   所以视口高于约 763px 的手机会明显重叠。
+   修法：手机上让资料块整体从大图下沿之后开始，标题自然落在图外。
+   （#profile_blog / #background 只存在于文章页模板，首页不受影响） */
+@media (max-width: 800px) {
+  #profile_blog {
+    margin-top: 57vh;
+  }
+}
+
 :root {
   --bg-color: #fff;
   --text-color: rgb(10, 10, 10);
