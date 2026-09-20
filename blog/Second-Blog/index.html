@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>更新！太强了DS v4.1 Flash ！</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../../index.css">
+</head>
+  <body>
+    <div id="loading">
+      <div id="spinner"></div>
+    </div>
+    <a href="/" class="go_back"><i class="fas fa-arrow-left"></i></a>
+    <div id="background_overlay"></div>
+    <div id="background" style="background: url(top.png) center;"></div>
+    <table id="profile_blog">
+      <tbody>
+        <tr>
+          <td style="width:8vw;"><div id="profile_img_blog"></div></td>
+          <td style="width:52vw;">
+            <div id="username_blog"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="blog-display">
+      <h1 id="blog_title">更新！太强了DS v4.1 Flash ！</h1>
+      <h2 id="blog_sub_title">添加了可视化blog编写页面，带有一键发布/预览文章等功能</h2>
+      <div id="blog">
+        <p><a href="屏幕截图 2026-09-20 161639.png" target="_blank">屏幕截图 2026-09-20 161639</a></p>
+<h2>交付清单</h2>
+<p>| 文件 | 大小 | 职责 | |---|---|---| | <code>gitfolio\studio.html</code> | 18.9 KB | BlogStudio 界面（编辑区 + 实时预览 + 日志） | | <code>gitfolio\studio-server.js</code> | 13.8 KB | 本地服务端，零第三方依赖，只监听 127.0.0.1 | | <code>gitfolio\md2post.ps1</code> | 11.8 KB | 文章渲染器：Markdown + 前言 → gitfolio 格式的 HTML | | <code>gitfolio\blog.ps1</code> | 10.5 KB | 命令行入口：<code>new</code> / <code>list</code> / <code>edit</code> / <code>build</code> / <code>preview</code> / <code>publish</code> | | <code>gitfolio\sync-blog.ps1</code> | 10.9 KB | 发布流水线：生成 → 校验 → 同步 → 提交 → 推送 | | <code>gitfolio\BlogStudio.cmd</code>、<code>sync-blog.cmd</code> | 150 / 194 B | 双击入口 | | <code>bin\blog.cmd</code>、<code>bin\BlogStudio.cmd</code> | 205 / 55 B | <b>全局命令</b>（<code>D:\Projects\bin</code> 已加进你的用户 PATH） |</p>
+<p><b>核心设计原则：一个渲染器、一个发布器。</b> 三个入口（图形界面 / <code>blog</code> 命令 / <code>sync-blog.cmd</code>）最终都走 <code>md2post.ps1</code> 和 <code>sync-blog.ps1</code> 这一套 —— 改一处逻辑，三条路同时生效，不会出现&quot;界面里是对的、命令行里是错的&quot;。</p>
+<h2>内置的七道保护（都是今天实际踩过的坑）</h2>
+<ol>
+<li><b>博客目录大小写检查</b> —— Windows 不区分大小写、GitHub Pages 是 Linux 区分，不一致会 404。现在会直接报错并给出修法</li>
+<li><b>快照是否真的重新生成</b> —— 比对 <code>dist\index.html</code> 时间戳，没变就中止并提示&quot;可能是 GitHub API 限流&quot;，避免把旧快照推上线</li>
+<li><b><code>Copy-Item</code> 只增不删的漂移检测</b> —— 列出发布仓库里已删除文章的残留（要 <code>-Clean</code> 才真删）</li>
+<li><b>旧文章自动备份</b> —— 网页编辑器建的 HTML 文章第一次转 Markdown 时，原 <code>index.html</code> 自动备份成 <code>.bak</code></li>
+<li><b><code>.nojekyll</code> 自动补</b> —— 让 GitHub Pages 跳过 Jekyll</li>
+<li><b>安全防护</b> —— 网址名白名单 + 路径穿越拦截（实测 403），服务端只绑本机</li>
+<li><b>编码修复</b> —— <code>.ps1</code> 带 UTF-8 BOM、<code>.cmd</code> 用 CRLF + <code>chcp 65001</code>、Node 调 PowerShell 时强制 UTF-8 输出</li>
+</ol>
+<h2>测试覆盖</h2>
+<p>| 类型 | 内容 | 结果 | |---|---|---| | 静态检查 | 脚本语法、HTML 内联 JS 语法、25 个 <code>$(&#39;id&#39;)</code> 引用一致性 | 全过 | | 服务端联调 | 首页/state/上传/去重/保存/备份/渲染/预览/穿越防护/发布链路 | 12 项全过 | | 中文端到端 | 中文标题、副标题、正文、中文图片名、冒号边界、转义 | 13 项全过 | | 启动器实测 | 四个 <code>.cmd</code> 走真实 cmd.exe（等价双击） | 全过 |</p>
+<p>测试全程在沙箱文章上做，跑完删除并<b>按备份逐字节还原</b> <code>blog.json</code>，你的真实数据零污染。</p>
+      </div>
+    </div>
+    <div id="footer_blog">
+      <a href="https://github.com/imfunniee" target="_blank"
+        >made on earth by a human</a
+      >
+    </div>
+    <script type="text/javascript">
+      setTimeout(function() {
+        document.getElementById("loading").classList.add("animated");
+        document.getElementById("loading").classList.add("fadeOut");
+        setTimeout(function() {
+          document.getElementById("loading").classList.remove("animated");
+          document.getElementById("loading").classList.remove("fadeOut");
+          document.getElementById("loading").style.display = "none";
+        }, 800);
+      }, 1500);
+      $.getJSON("../../config.json", function(user) {
+        var icon = document.createElement("link");
+        icon.setAttribute("rel", "icon");
+        icon.setAttribute("href", user[0].userimg);
+        icon.setAttribute("type", "image/png");
+        document.getElementsByTagName("head")[0].appendChild(icon);
+        document.getElementById(
+          "profile_img_blog"
+        ).style.background = `url('${user[0].userimg}') center center`;
+        document.getElementById(
+          "username_blog"
+        ).innerHTML = `<span style="display:${
+          user[0].name == null || !user[0].name ? "none" : "block"
+        };">${user[0].name}</span>@${user[0].username}<b id="blog_time"></b>`;
+
+        if ((user[0].theme = "dark.css")) {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(10, 10, 10, 1), rgba(10, 10, 10, 0.1))";
+        } else {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1))";
+        }
+      });
+    </script>
+  </body>
+</html>
