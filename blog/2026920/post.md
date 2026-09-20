@@ -6,6 +6,8 @@ top_image: top.jpeg
 
 这个博客底层用的是 gitfolio —— 一个把 GitHub 账号渲染成静态网站的小工具。我最初 clone 下来的时候，它已经归档四年了（最后一次提交是 2022 年 2 月），能跑，但用起来很费劲。这两天我把它从「能跑」改成了「顺手」，记一下都改了什么。
 
+**开源地址：https://github.com/need-to-find-name/gitfolio-improved**
+
 ## 起点：clone 下来的是什么
 原项目：https://github.com/imfunniee/gitfolio.git （2022 归档）
 
