@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>2026.9.20个人博客更新汇总</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../../index.css">
+<style>
+#blog h2,#blog h3,#blog h4,#blog h5,#blog h6{color:inherit;line-height:1.35;margin:34px 0 14px;font-weight:600}
+#blog h2{font-size:1.6em}
+#blog h3{font-size:1.3em}
+#blog h4{font-size:1.12em}
+#blog h5,#blog h6{font-size:1em}
+#blog ul,#blog ol{margin:16px 0;padding-left:1.6em}
+#blog li{margin:6px 0}
+#blog li>ul,#blog li>ol{margin:6px 0}
+#blog blockquote{margin:18px 0;padding:2px 0 2px 16px;border-left:3px solid rgba(128,128,128,.5);opacity:.92}
+#blog blockquote p{margin:8px 0}
+#blog pre{margin:18px 0;padding:12px 14px;border-radius:6px;background:rgba(128,128,128,.15);overflow:auto}
+#blog pre code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.88em;background:none;padding:0}
+#blog code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.9em;background:rgba(128,128,128,.18);padding:2px 5px;border-radius:4px}
+#blog a{text-decoration:underline}
+#blog hr{border:none;border-top:1px solid rgba(128,128,128,.4);margin:26px 0}
+#blog table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.95em}
+#blog th,#blog td{border:1px solid rgba(128,128,128,.45);padding:8px 12px;vertical-align:top;text-align:left}
+#blog th{font-weight:600;background:rgba(128,128,128,.14)}
+#blog tbody tr:nth-child(even){background:rgba(128,128,128,.06)}
+#blog th[align="center"],#blog td[align="center"]{text-align:center}
+#blog th[align="right"],#blog td[align="right"]{text-align:right}
+#blog ul.task-list{list-style:none;padding-left:.5em}
+#blog ul.task-list li{display:flex;align-items:flex-start;gap:.5em}
+#blog ul.task-list input{margin:.4em 0 0 0;flex:none}
+#blog del{opacity:.65}
+#blog sup.fnref{font-size:.75em;line-height:0;vertical-align:super}
+#blog sup.fnref a{text-decoration:none}
+#blog section.footnotes{margin-top:12px;font-size:.9em;opacity:.92}
+#blog section.footnotes p{margin:8px 0}
+#blog section.footnotes ol{padding-left:1.5em}
+#blog section.footnotes li{margin:6px 0}
+#blog .fnback{text-decoration:none;margin-left:.3em}
+</style></head>
+  <body>
+    <div id="loading">
+      <div id="spinner"></div>
+    </div>
+    <a href="/" class="go_back"><i class="fas fa-arrow-left"></i></a>
+    <div id="background_overlay"></div>
+    <div id="background" style="background: url(top.jpeg) center;"></div>
+    <table id="profile_blog">
+      <tbody>
+        <tr>
+          <td style="width:8vw;"><div id="profile_img_blog"></div></td>
+          <td style="width:52vw;">
+            <div id="username_blog"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="blog-display">
+      <h1 id="blog_title">2026.9.20个人博客更新汇总</h1>
+      <h2 id="blog_sub_title">借助workbuddy实现的gitfolio个人博客的升级</h2>
+      <div id="blog">
+        <p>这个博客底层用的是 gitfolio —— 一个把 GitHub 账号渲染成静态网站的小工具。我最初 clone 下来的时候，它已经归档四年了（最后一次提交是 2022 年 2 月），能跑，但用起来很费劲。这两天我把它从「能跑」改成了「顺手」，记一下都改了什么。</p>
+<h2>起点：clone 下来的是什么</h2>
+<p>上游仓库一共 31 个文件，能力就两件事：</p>
+<ul>
+<li>首页：把 GitHub 账号资料和公开仓库列表渲染成个人主页</li>
+<li>博客：一个网页表单，填标题、传图、写正文，然后生成静态页面</li>
+</ul>
+<p>用它也不轻松：命令行切目录、敲生成命令、开浏览器、填表单、点提交，最后再手动复制产物、git 提交、git 推送。中间有好几个会静默失败的地方。</p>
+<h2>现在多了什么</h2>
+<p><b>写文章换成了 Markdown。</b> 原来那个网页表单只在键盘敲击时同步正文，粘贴进去的内容不会被提交；顶部大图必填；内容为空时还不报错。现在直接写 Markdown，标题、列表、引用、代码块、图片、链接都能用。</p>
+<p><b>两种写法，同一套底层。</b>一个是可以双击打开的图形界面，一个是命令行。不管走哪条路，渲染和发布的逻辑都是同一套，不会出现两边结果不一样。</p>
+<p><b>一键上线。</b>原来是「复制产物 → 三条 git 命令」三步手动操作，现在点一次按钮或者敲一条命令就完事。</p>
+<p><b>实时预览。</b>右边边写边显示渲染结果，不用先保存再看效果。</p>
+<p><b>Markdown 能力补齐。</b> 除了常规语法，还支持表格（含左中右对齐）、任务列表、删除线、脚注，以及合并单元格。文章页的排版也顺手补齐了 —— 原来只有段落和图片有样式，标题、代码块、引用、列表全是浏览器默认的样子。</p>
+<p><b>一批自动检查。</b> 都是我在用的时候真踩过的坑：</p>
+<ul>
+<li>文章目录大小写不一致，本地正常但线上会 404 → 发布前直接拦下来</li>
+<li>改了 GitHub 资料或仓库却忘了重新生成，推上去还是旧内容 → 比对文件时间戳，没生成就中止</li>
+<li>复制文件只增不删，删掉的文章会一直留在线上 → 发布前列出来提醒</li>
+<li>早期 HTML 格式的文章转成 Markdown 时，原文件先自动备份</li>
+</ul>
+<p><b>发布后能马上看到。</b>&amp;#8203; 之前新文章最多要等十分钟才出现在首页，是缓存的问题，现在绕过了。</p>
+<h2>对比</h2>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>原来</th>
+<th>现在</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打开编辑器</td>
+<td>手动切目录 + 敲命令</td>
+<td>双击一个程序</td>
+</tr>
+<tr>
+<td>写正文</td>
+<td>网页富文本，粘贴会丢</td>
+<td>写 Markdown</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>要另起一个服务，还会抢端口</td>
+<td>边写边见</td>
+</tr>
+<tr>
+<td>图片</td>
+<td>顶部大图必填且容易漏</td>
+<td>选图即上传</td>
+</tr>
+<tr>
+<td>发布</td>
+<td>复制 + 三条 git 命令</td>
+<td>一个按钮</td>
+</tr>
+<tr>
+<td>出错时</td>
+<td>终端没有输出</td>
+<td>完整输出打到界面日志里</td>
+</tr>
+<tr>
+<td>中文</td>
+<td>标题中文会生成空目录名</td>
+<td>标题、正文、图片名全支持中文</td>
+</tr>
+</tbody>
+</table>
+<p>规模上，一共新增 11 个文件（2 个是全局命令入口），新加的部分没有引入任何第三方依赖，用的都是 Node 和 PowerShell 自带的能力。</p>
+      </div>
+    </div>
+    <div id="footer_blog">
+      <a href="https://github.com/imfunniee" target="_blank"
+        >made on earth by a human</a
+      >
+    </div>
+    <script type="text/javascript">
+      setTimeout(function() {
+        document.getElementById("loading").classList.add("animated");
+        document.getElementById("loading").classList.add("fadeOut");
+        setTimeout(function() {
+          document.getElementById("loading").classList.remove("animated");
+          document.getElementById("loading").classList.remove("fadeOut");
+          document.getElementById("loading").style.display = "none";
+        }, 800);
+      }, 1500);
+      $.getJSON("../../config.json", function(user) {
+        var icon = document.createElement("link");
+        icon.setAttribute("rel", "icon");
+        icon.setAttribute("href", user[0].userimg);
+        icon.setAttribute("type", "image/png");
+        document.getElementsByTagName("head")[0].appendChild(icon);
+        document.getElementById(
+          "profile_img_blog"
+        ).style.background = `url('${user[0].userimg}') center center`;
+        document.getElementById(
+          "username_blog"
+        ).innerHTML = `<span style="display:${
+          user[0].name == null || !user[0].name ? "none" : "block"
+        };">${user[0].name}</span>@${user[0].username}<b id="blog_time"></b>`;
+
+        if ((user[0].theme = "dark.css")) {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(10, 10, 10, 1), rgba(10, 10, 10, 0.1))";
+        } else {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1))";
+        }
+      });
+    </script>
+  </body>
+</html>

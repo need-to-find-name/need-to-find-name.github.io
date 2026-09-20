@@ -19,5 +19,12 @@
   "sub_title": "实现了编写blog的markdown语言实时渲染，所见即所得",
   "top_image": "top.jpeg",
   "visible": true
+ },
+ {
+  "url_title": "2026920",
+  "title": "2026.9.20个人博客更新汇总",
+  "sub_title": "借助workbuddy实现的gitfolio个人博客的升级",
+  "top_image": "top.jpeg",
+  "visible": true
  }
 ]
