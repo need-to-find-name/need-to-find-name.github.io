@@ -21,7 +21,14 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="../../index.css">
-</head>
+<style>
+#blog table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.95em}
+#blog th,#blog td{border:1px solid rgba(128,128,128,.45);padding:8px 12px;vertical-align:top;text-align:left}
+#blog th{font-weight:600;background:rgba(128,128,128,.14)}
+#blog tbody tr:nth-child(even){background:rgba(128,128,128,.06)}
+#blog th[align="center"],#blog td[align="center"]{text-align:center}
+#blog th[align="right"],#blog td[align="right"]{text-align:right}
+</style></head>
   <body>
     <div id="loading">
       <div id="spinner"></div>
@@ -43,9 +50,54 @@
       <h1 id="blog_title">更新！太强了DS v4.1 Flash ！</h1>
       <h2 id="blog_sub_title">添加了可视化blog编写页面，带有一键发布/预览文章等功能</h2>
       <div id="blog">
-        <p><a href="屏幕截图 2026-09-20 161639.png" target="_blank">屏幕截图 2026-09-20 161639</a></p>
+        <p><img src="屏幕截图 2026-09-20 161639.png" alt="屏幕截图 2026-09-20 161639"></p>
 <h2>交付清单</h2>
-<p>| 文件 | 大小 | 职责 | |---|---|---| | <code>gitfolio\studio.html</code> | 18.9 KB | BlogStudio 界面（编辑区 + 实时预览 + 日志） | | <code>gitfolio\studio-server.js</code> | 13.8 KB | 本地服务端，零第三方依赖，只监听 127.0.0.1 | | <code>gitfolio\md2post.ps1</code> | 11.8 KB | 文章渲染器：Markdown + 前言 → gitfolio 格式的 HTML | | <code>gitfolio\blog.ps1</code> | 10.5 KB | 命令行入口：<code>new</code> / <code>list</code> / <code>edit</code> / <code>build</code> / <code>preview</code> / <code>publish</code> | | <code>gitfolio\sync-blog.ps1</code> | 10.9 KB | 发布流水线：生成 → 校验 → 同步 → 提交 → 推送 | | <code>gitfolio\BlogStudio.cmd</code>、<code>sync-blog.cmd</code> | 150 / 194 B | 双击入口 | | <code>bin\blog.cmd</code>、<code>bin\BlogStudio.cmd</code> | 205 / 55 B | <b>全局命令</b>（<code>D:\Projects\bin</code> 已加进你的用户 PATH） |</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>大小</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gitfolio\studio.html</code></td>
+<td>18.9 KB</td>
+<td>BlogStudio 界面（编辑区 + 实时预览 + 日志）</td>
+</tr>
+<tr>
+<td><code>gitfolio\studio-server.js</code></td>
+<td>13.8 KB</td>
+<td>本地服务端，零第三方依赖，只监听 127.0.0.1</td>
+</tr>
+<tr>
+<td><code>gitfolio\md2post.ps1</code></td>
+<td>11.8 KB</td>
+<td>文章渲染器：Markdown + 前言 → gitfolio 格式的 HTML</td>
+</tr>
+<tr>
+<td><code>gitfolio\blog.ps1</code></td>
+<td>10.5 KB</td>
+<td>命令行入口：<code>new</code> / <code>list</code> / <code>edit</code> / <code>build</code> / <code>preview</code> / <code>publish</code></td>
+</tr>
+<tr>
+<td><code>gitfolio\sync-blog.ps1</code></td>
+<td>10.9 KB</td>
+<td>发布流水线：生成 → 校验 → 同步 → 提交 → 推送</td>
+</tr>
+<tr>
+<td><code>gitfolio\BlogStudio.cmd</code>、<code>sync-blog.cmd</code></td>
+<td>150 / 194 B</td>
+<td>双击入口</td>
+</tr>
+<tr>
+<td><code>bin\blog.cmd</code>、<code>bin\BlogStudio.cmd</code></td>
+<td>205 / 55 B</td>
+<td><b>全局命令</b>（<code>D:\Projects\bin</code> 已加进你的用户 PATH）</td>
+</tr>
+</tbody>
+</table>
 <p><b>核心设计原则：一个渲染器、一个发布器。</b> 三个入口（图形界面 / <code>blog</code> 命令 / <code>sync-blog.cmd</code>）最终都走 <code>md2post.ps1</code> 和 <code>sync-blog.ps1</code> 这一套 —— 改一处逻辑，三条路同时生效，不会出现&quot;界面里是对的、命令行里是错的&quot;。</p>
 <h2>内置的七道保护（都是今天实际踩过的坑）</h2>
 <ol>
@@ -58,7 +110,37 @@
 <li><b>编码修复</b> —— <code>.ps1</code> 带 UTF-8 BOM、<code>.cmd</code> 用 CRLF + <code>chcp 65001</code>、Node 调 PowerShell 时强制 UTF-8 输出</li>
 </ol>
 <h2>测试覆盖</h2>
-<p>| 类型 | 内容 | 结果 | |---|---|---| | 静态检查 | 脚本语法、HTML 内联 JS 语法、25 个 <code>$(&#39;id&#39;)</code> 引用一致性 | 全过 | | 服务端联调 | 首页/state/上传/去重/保存/备份/渲染/预览/穿越防护/发布链路 | 12 项全过 | | 中文端到端 | 中文标题、副标题、正文、中文图片名、冒号边界、转义 | 13 项全过 | | 启动器实测 | 四个 <code>.cmd</code> 走真实 cmd.exe（等价双击） | 全过 |</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>内容</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>静态检查</td>
+<td>脚本语法、HTML 内联 JS 语法、25 个 <code>$(&#39;id&#39;)</code> 引用一致性</td>
+<td>全过</td>
+</tr>
+<tr>
+<td>服务端联调</td>
+<td>首页/state/上传/去重/保存/备份/渲染/预览/穿越防护/发布链路</td>
+<td>12 项全过</td>
+</tr>
+<tr>
+<td>中文端到端</td>
+<td>中文标题、副标题、正文、中文图片名、冒号边界、转义</td>
+<td>13 项全过</td>
+</tr>
+<tr>
+<td>启动器实测</td>
+<td>四个 <code>.cmd</code> 走真实 cmd.exe（等价双击）</td>
+<td>全过</td>
+</tr>
+</tbody>
+</table>
 <p>测试全程在沙箱文章上做，跑完删除并<b>按备份逐字节还原</b> <code>blog.json</code>，你的真实数据零污染。</p>
       </div>
     </div>
