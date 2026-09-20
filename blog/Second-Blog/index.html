@@ -22,12 +22,38 @@
     ></script>
     <link rel="stylesheet" href="../../index.css">
 <style>
+#blog h2,#blog h3,#blog h4,#blog h5,#blog h6{color:inherit;line-height:1.35;margin:34px 0 14px;font-weight:600}
+#blog h2{font-size:1.6em}
+#blog h3{font-size:1.3em}
+#blog h4{font-size:1.12em}
+#blog h5,#blog h6{font-size:1em}
+#blog ul,#blog ol{margin:16px 0;padding-left:1.6em}
+#blog li{margin:6px 0}
+#blog li>ul,#blog li>ol{margin:6px 0}
+#blog blockquote{margin:18px 0;padding:2px 0 2px 16px;border-left:3px solid rgba(128,128,128,.5);opacity:.92}
+#blog blockquote p{margin:8px 0}
+#blog pre{margin:18px 0;padding:12px 14px;border-radius:6px;background:rgba(128,128,128,.15);overflow:auto}
+#blog pre code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.88em;background:none;padding:0}
+#blog code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.9em;background:rgba(128,128,128,.18);padding:2px 5px;border-radius:4px}
+#blog a{text-decoration:underline}
+#blog hr{border:none;border-top:1px solid rgba(128,128,128,.4);margin:26px 0}
 #blog table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.95em}
 #blog th,#blog td{border:1px solid rgba(128,128,128,.45);padding:8px 12px;vertical-align:top;text-align:left}
 #blog th{font-weight:600;background:rgba(128,128,128,.14)}
 #blog tbody tr:nth-child(even){background:rgba(128,128,128,.06)}
 #blog th[align="center"],#blog td[align="center"]{text-align:center}
 #blog th[align="right"],#blog td[align="right"]{text-align:right}
+#blog ul.task-list{list-style:none;padding-left:.5em}
+#blog ul.task-list li{display:flex;align-items:flex-start;gap:.5em}
+#blog ul.task-list input{margin:.4em 0 0 0;flex:none}
+#blog del{opacity:.65}
+#blog sup.fnref{font-size:.75em;line-height:0;vertical-align:super}
+#blog sup.fnref a{text-decoration:none}
+#blog section.footnotes{margin-top:12px;font-size:.9em;opacity:.92}
+#blog section.footnotes p{margin:8px 0}
+#blog section.footnotes ol{padding-left:1.5em}
+#blog section.footnotes li{margin:6px 0}
+#blog .fnback{text-decoration:none;margin-left:.3em}
 </style></head>
   <body>
     <div id="loading">
@@ -50,98 +76,149 @@
       <h1 id="blog_title">更新！太强了DS v4.1 Flash ！</h1>
       <h2 id="blog_sub_title">添加了可视化blog编写页面，带有一键发布/预览文章等功能</h2>
       <div id="blog">
-        <p><img src="屏幕截图 2026-09-20 161639.png" alt="屏幕截图 2026-09-20 161639"></p>
-<h2>交付清单</h2>
+        <p><img src="屏幕截图 2026-09-20 161639.png" alt="屏幕截图 2026-09-20 161639"> 这个博客底层用的是 gitfolio。它是一个把 GitHub 账号渲染成静态网站的小工具，能显示个人资料和公开仓库，也带一个写博客的界面。问题是它上游已经在 2022 年 2 月归档、不再维护了，而且写文章那一套流程一直是「手敲命令 + 网页表单」的组合。</p>
+<p>过去写一篇文章，我要打开终端、<code>cd</code> 到项目目录、敲一条生成命令、等浏览器打开表单、填标题和副标题、上传图片、点提交。每一步都不难，但每次都要重来一遍，中间还有好几个会静默失败的地方。</p>
+<p>这两天我把它从「能跑」改成「顺手」，记录一下到底改了什么。</p>
+<h2>原来的流程是什么样</h2>
+<p>gitfolio 的工作方式其实很简单，一句话：它把 GitHub 账号渲染成一个静态网站。</p>
+<ul>
+<li>首页的姓名、简介、头像、所在地，全部来自 GitHub API 返回的账号资料</li>
+<li>首页的 <code>Work.</code> 区块就是公开仓库列表，一个仓库一张卡片</li>
+<li>生成结果统一放在 <code>dist/</code> 目录，推到 <code>need-to-find-name.github.io</code> 仓库后由 GitHub Pages 托管</li>
+</ul>
+<p>所以它有两处数据源 —— GitHub 账号和本地文章 —— 而 <code>dist/</code> 只是一张快照。GitHub 上改了资料或加了仓库，不重新生成一次，线上什么都不会变。</p>
+<h2>原来写一篇文章要过几道坎</h2>
+<p>这些都是真实踩出来的，不是假设：</p>
 <table>
 <thead>
 <tr>
-<th>文件</th>
-<th>大小</th>
-<th>职责</th>
+<th>环节</th>
+<th>原来的问题</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>gitfolio\studio.html</code></td>
-<td>18.9 KB</td>
-<td>BlogStudio 界面（编辑区 + 实时预览 + 日志）</td>
+<td>打开编辑器</td>
+<td>得手动 <code>cd</code> 到项目目录再敲命令，命令记不住</td>
 </tr>
 <tr>
-<td><code>gitfolio\studio-server.js</code></td>
-<td>13.8 KB</td>
-<td>本地服务端，零第三方依赖，只监听 127.0.0.1</td>
+<td>写正文</td>
+<td>网页编辑器的正文字段只在键盘敲击时同步，粘贴进去的内容不会被提交</td>
 </tr>
 <tr>
-<td><code>gitfolio\md2post.ps1</code></td>
-<td>11.8 KB</td>
-<td>文章渲染器：Markdown + 前言 → gitfolio 格式的 HTML</td>
+<td>上传图片</td>
+<td>顶部大图是必填项，漏传时报错不明显</td>
 </tr>
 <tr>
-<td><code>gitfolio\blog.ps1</code></td>
-<td>10.5 KB</td>
-<td>命令行入口：<code>new</code> / <code>list</code> / <code>edit</code> / <code>build</code> / <code>preview</code> / <code>publish</code></td>
+<td>提交失败</td>
+<td>正文为空时服务端只返回一行文字，终端里什么都不打印，很容易以为「点了没反应」</td>
 </tr>
 <tr>
-<td><code>gitfolio\sync-blog.ps1</code></td>
-<td>10.9 KB</td>
-<td>发布流水线：生成 → 校验 → 同步 → 提交 → 推送</td>
+<td>本地预览</td>
+<td>编辑器 <code>ui</code> 和预览 <code>run</code> 都默认占用 3000 端口，同时开必然有一个崩</td>
 </tr>
 <tr>
-<td><code>gitfolio\BlogStudio.cmd</code>、<code>sync-blog.cmd</code></td>
-<td>150 / 194 B</td>
-<td>双击入口</td>
+<td>更新站点</td>
+<td>改完 GitHub 资料或仓库后忘了重新生成，推上去的还是旧快照，首页区块是空的</td>
 </tr>
 <tr>
-<td><code>bin\blog.cmd</code>、<code>bin\BlogStudio.cmd</code></td>
-<td>205 / 55 B</td>
-<td><b>全局命令</b>（<code>D:\Projects\bin</code> 已加进你的用户 PATH）</td>
+<td>发布</td>
+<td>手动三步：复制 <code>dist/</code> 内容到发布仓库、<code>git add</code> 和 <code>commit</code>、<code>git push</code></td>
+</tr>
+<tr>
+<td>文章网址</td>
+<td>目录名由标题生成，标题里的中文会被过滤掉，纯中文标题会变成空目录名</td>
+</tr>
+<tr>
+<td>大小写</td>
+<td>Windows 不区分大小写，GitHub Pages 跑在 Linux 上区分，本地正常、线上一开就是 404</td>
 </tr>
 </tbody>
 </table>
-<p><b>核心设计原则：一个渲染器、一个发布器。</b> 三个入口（图形界面 / <code>blog</code> 命令 / <code>sync-blog.cmd</code>）最终都走 <code>md2post.ps1</code> 和 <code>sync-blog.ps1</code> 这一套 —— 改一处逻辑，三条路同时生效，不会出现&quot;界面里是对的、命令行里是错的&quot;。</p>
-<h2>内置的七道保护（都是今天实际踩过的坑）</h2>
+<h2>现在改成什么样</h2>
+<p>核心原则是<b>一个渲染器、一个发布器</b>：所有入口最终都走同一条链路，避免「界面里是对的、命令行里是错的」。</p>
+<p>三个入口各管一段：</p>
+<ul>
+<li><b>BlogStudio</b> —— 双击就能打开的图形界面，主要用来写文章</li>
+<li><b>blog 命令</b> —— 命令行方式，<code>blog new</code>、<code>blog list</code>、<code>blog publish</code></li>
+<li><b>发布脚本</b> —— 只管发布，不写文章</li>
+</ul>
+<p>链路是固定的：写 Markdown，渲染成 HTML，校验，同步到发布仓库，提交推送。</p>
+<h2>逐项对比</h2>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>原来的做法</th>
+<th>现在的做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>打开编辑器</td>
+<td>手动切目录加敲命令</td>
+<td>双击一个程序，浏览器自动打开</td>
+</tr>
+<tr>
+<td>写正文</td>
+<td>网页富文本，粘贴会丢</td>
+<td>直接写 Markdown，支持标题、列表、引用、代码块、表格</td>
+</tr>
+<tr>
+<td>图片</td>
+<td>顶部大图必填且容易漏</td>
+<td>选图即上传，自动落到文章目录，重名自动加序号</td>
+</tr>
+<tr>
+<td>预览</td>
+<td>要另起一个服务，还会抢端口</td>
+<td>保存后右侧直接刷新预览</td>
+</tr>
+<tr>
+<td>发布</td>
+<td>复制加三条 git 命令</td>
+<td>一个按钮</td>
+</tr>
+<tr>
+<td>更新站点信息</td>
+<td>记得重新跑生成命令</td>
+<td>一个按钮，重新拉取资料和仓库再发布</td>
+</tr>
+<tr>
+<td>出错时</td>
+<td>只回一行文字，终端没有输出</td>
+<td>完整输出打到界面的日志区</td>
+</tr>
+<tr>
+<td>中文</td>
+<td>标题中文会生成空目录名</td>
+<td>标题、副标题、正文、图片名全链路支持中文</td>
+</tr>
+</tbody>
+</table>
+<h2>顺手加的几道自动检查</h2>
+<p>原来很多坑的共同点是「不出声」，所以我加了几道会在发布前拦下来的检查：</p>
 <ol>
-<li><b>博客目录大小写检查</b> —— Windows 不区分大小写、GitHub Pages 是 Linux 区分，不一致会 404。现在会直接报错并给出修法</li>
-<li><b>快照是否真的重新生成</b> —— 比对 <code>dist\index.html</code> 时间戳，没变就中止并提示&quot;可能是 GitHub API 限流&quot;，避免把旧快照推上线</li>
-<li><b><code>Copy-Item</code> 只增不删的漂移检测</b> —— 列出发布仓库里已删除文章的残留（要 <code>-Clean</code> 才真删）</li>
-<li><b>旧文章自动备份</b> —— 网页编辑器建的 HTML 文章第一次转 Markdown 时，原 <code>index.html</code> 自动备份成 <code>.bak</code></li>
-<li><b><code>.nojekyll</code> 自动补</b> —— 让 GitHub Pages 跳过 Jekyll</li>
-<li><b>安全防护</b> —— 网址名白名单 + 路径穿越拦截（实测 403），服务端只绑本机</li>
-<li><b>编码修复</b> —— <code>.ps1</code> 带 UTF-8 BOM、<code>.cmd</code> 用 CRLF + <code>chcp 65001</code>、Node 调 PowerShell 时强制 UTF-8 输出</li>
+<li><b>博客目录大小写一致性</b> —— 不一致就直接报错。线上是 Linux，大小写不一致会 404，但本地完全看不出来</li>
+<li><b>快照是否真的重新生成</b> —— 比对生成产物的时间戳，没变就中止，避免把旧内容推上线</li>
+<li><b>删除残留检测</b> —— 复制文件的操作只增不删，删过的文章会一直留在线上，现在会列出来提醒</li>
+<li><b>旧文章自动备份</b> —— 把早期 HTML 格式的文章转成 Markdown 时，原文件先备份成 <code>.bak</code></li>
 </ol>
-<h2>测试覆盖</h2>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>内容</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>静态检查</td>
-<td>脚本语法、HTML 内联 JS 语法、25 个 <code>$(&#39;id&#39;)</code> 引用一致性</td>
-<td>全过</td>
-</tr>
-<tr>
-<td>服务端联调</td>
-<td>首页/state/上传/去重/保存/备份/渲染/预览/穿越防护/发布链路</td>
-<td>12 项全过</td>
-</tr>
-<tr>
-<td>中文端到端</td>
-<td>中文标题、副标题、正文、中文图片名、冒号边界、转义</td>
-<td>13 项全过</td>
-</tr>
-<tr>
-<td>启动器实测</td>
-<td>四个 <code>.cmd</code> 走真实 cmd.exe（等价双击）</td>
-<td>全过</td>
-</tr>
-</tbody>
-</table>
-<p>测试全程在沙箱文章上做，跑完删除并<b>按备份逐字节还原</b> <code>blog.json</code>，你的真实数据零污染。</p>
+<h2>现在还做不到的</h2>
+<p>把边界说清楚，避免误导：</p>
+<ul>
+<li>正文是「点保存后刷新预览」，没有逐字实时预览</li>
+<li>正文里的原始 HTML 会被转义成文本，只能用 Markdown 语法</li>
+<li>Markdown 支持的是常用子集：标题、段落、粗体斜体、行内代码、代码块、有序和无序列表、引用、分隔线、图片、链接、表格。任务列表、删除线、脚注、表格里的合并单元格都没做</li>
+</ul>
+<h2>一点实现上的收获</h2>
+<p>真正花时间的其实不是功能本身，而是几个环境细节：</p>
+<ul>
+<li><b>Node 调用 PowerShell 时的中文乱码</b> —— 子进程默认按系统代码页输出，得先让 PowerShell 把输出编码设成 UTF-8</li>
+<li><b>Windows 批处理文件必须用 CRLF 换行</b> —— 用 LF 写出来的 <code>.cmd</code> 双击后报了一串「不是内部或外部命令」，因为解析器把命令行拆错了位置</li>
+<li><b>PowerShell 脚本文件必须带 UTF-8 BOM</b> —— 否则中文注释会被按本地代码页解析，抛出莫名其妙的括号语法错误</li>
+</ul>
+<p>这些东西文档里不会写，只有真跑一遍才会遇到。</p>
       </div>
     </div>
     <div id="footer_blog">

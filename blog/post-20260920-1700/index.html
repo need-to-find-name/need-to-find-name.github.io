@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>什么叫又更新了</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../../index.css">
+<style>
+#blog h2,#blog h3,#blog h4,#blog h5,#blog h6{color:inherit;line-height:1.35;margin:34px 0 14px;font-weight:600}
+#blog h2{font-size:1.6em}
+#blog h3{font-size:1.3em}
+#blog h4{font-size:1.12em}
+#blog h5,#blog h6{font-size:1em}
+#blog ul,#blog ol{margin:16px 0;padding-left:1.6em}
+#blog li{margin:6px 0}
+#blog li>ul,#blog li>ol{margin:6px 0}
+#blog blockquote{margin:18px 0;padding:2px 0 2px 16px;border-left:3px solid rgba(128,128,128,.5);opacity:.92}
+#blog blockquote p{margin:8px 0}
+#blog pre{margin:18px 0;padding:12px 14px;border-radius:6px;background:rgba(128,128,128,.15);overflow:auto}
+#blog pre code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.88em;background:none;padding:0}
+#blog code{font-family:Consolas,"Cascadia Mono",Menlo,monospace;font-size:.9em;background:rgba(128,128,128,.18);padding:2px 5px;border-radius:4px}
+#blog a{text-decoration:underline}
+#blog hr{border:none;border-top:1px solid rgba(128,128,128,.4);margin:26px 0}
+#blog table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.95em}
+#blog th,#blog td{border:1px solid rgba(128,128,128,.45);padding:8px 12px;vertical-align:top;text-align:left}
+#blog th{font-weight:600;background:rgba(128,128,128,.14)}
+#blog tbody tr:nth-child(even){background:rgba(128,128,128,.06)}
+#blog th[align="center"],#blog td[align="center"]{text-align:center}
+#blog th[align="right"],#blog td[align="right"]{text-align:right}
+#blog ul.task-list{list-style:none;padding-left:.5em}
+#blog ul.task-list li{display:flex;align-items:flex-start;gap:.5em}
+#blog ul.task-list input{margin:.4em 0 0 0;flex:none}
+#blog del{opacity:.65}
+#blog sup.fnref{font-size:.75em;line-height:0;vertical-align:super}
+#blog sup.fnref a{text-decoration:none}
+#blog section.footnotes{margin-top:12px;font-size:.9em;opacity:.92}
+#blog section.footnotes p{margin:8px 0}
+#blog section.footnotes ol{padding-left:1.5em}
+#blog section.footnotes li{margin:6px 0}
+#blog .fnback{text-decoration:none;margin-left:.3em}
+</style></head>
+  <body>
+    <div id="loading">
+      <div id="spinner"></div>
+    </div>
+    <a href="/" class="go_back"><i class="fas fa-arrow-left"></i></a>
+    <div id="background_overlay"></div>
+    <div id="background" style="background: url(top.jpeg) center;"></div>
+    <table id="profile_blog">
+      <tbody>
+        <tr>
+          <td style="width:8vw;"><div id="profile_img_blog"></div></td>
+          <td style="width:52vw;">
+            <div id="username_blog"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="blog-display">
+      <h1 id="blog_title">什么叫又更新了</h1>
+      <h2 id="blog_sub_title">实现了编写blog的markdown语言实时渲染，所见即所得</h2>
+      <div id="blog">
+        <h2>卧槽</h2>
+<p><img src="1789711131134.png" alt="1789711131134"></p>
+      </div>
+    </div>
+    <div id="footer_blog">
+      <a href="https://github.com/imfunniee" target="_blank"
+        >made on earth by a human</a
+      >
+    </div>
+    <script type="text/javascript">
+      setTimeout(function() {
+        document.getElementById("loading").classList.add("animated");
+        document.getElementById("loading").classList.add("fadeOut");
+        setTimeout(function() {
+          document.getElementById("loading").classList.remove("animated");
+          document.getElementById("loading").classList.remove("fadeOut");
+          document.getElementById("loading").style.display = "none";
+        }, 800);
+      }, 1500);
+      $.getJSON("../../config.json", function(user) {
+        var icon = document.createElement("link");
+        icon.setAttribute("rel", "icon");
+        icon.setAttribute("href", user[0].userimg);
+        icon.setAttribute("type", "image/png");
+        document.getElementsByTagName("head")[0].appendChild(icon);
+        document.getElementById(
+          "profile_img_blog"
+        ).style.background = `url('${user[0].userimg}') center center`;
+        document.getElementById(
+          "username_blog"
+        ).innerHTML = `<span style="display:${
+          user[0].name == null || !user[0].name ? "none" : "block"
+        };">${user[0].name}</span>@${user[0].username}<b id="blog_time"></b>`;
+
+        if ((user[0].theme = "dark.css")) {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(10, 10, 10, 1), rgba(10, 10, 10, 0.1))";
+        } else {
+          document.querySelector("#background_overlay").style.background =
+            "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1))";
+        }
+      });
+    </script>
+  </body>
+</html>
