@@ -85,7 +85,9 @@
           document.getElementById("loading").style.display = "none";
         }, 800);
       }, 1500);
-      $.getJSON("blog.json", function(blog) {
+      /* 加时间戳是因为 GitHub Pages 给 blog.json 的响应头是 Cache-Control: max-age=600，
+         不这么做的话，新发布的文章最多要等 10 分钟才会出现在首页卡片里 */
+      $.getJSON("blog.json?v=" + Date.now(), function(blog) {
         blog = blog || [];
         if (blog.length == 0) {
           return (document.getElementById("blog_section").style.display =
